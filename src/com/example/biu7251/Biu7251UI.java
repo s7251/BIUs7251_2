@@ -1,9 +1,14 @@
 package com.example.biu7251;
 
+import java.util.ArrayList;
+
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
@@ -13,7 +18,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-@Theme("biu7251")
 public class Biu7251UI extends UI {
 
 	@WebServlet(value = "/*", asyncSupported = true)
@@ -23,17 +27,41 @@ public class Biu7251UI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
-		final VerticalLayout layout = new VerticalLayout();
-		layout.setMargin(true);
-		setContent(layout);
+		      
+        
+        new Navigator(this, this);// stworzenie nowego nawigatora
+        getNavigator().addView(Biu7251LoginView.NAME, Biu7251LoginView.class); // panel logowania jako główny
+        getNavigator().addView(Biu7251MainView.NAME,
+                Biu7251MainView.class); //dodanie głównego widoku
+                       
+        
+        // użycie obsłuugi zmian widoku aby zapewnić przekierowanie do widoku logowania jeśli user nie zalogowany
+        
+        getNavigator().addViewChangeListener(new ViewChangeListener() {
+            
+            public boolean beforeViewChange(ViewChangeEvent event) {
+                
+                // Weryfikacja zalogowania
+                boolean isLoggedIn = getSession().getAttribute("user") != null;
+                boolean isLoginView = event.getNewView() instanceof Biu7251LoginView;
 
-		Button button = new Button("Click Me");
-		button.addClickListener(new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				layout.addComponent(new Label("Thank you for clicking"));
-			}
-		});
-		layout.addComponent(button);
-	}
+                if (!isLoggedIn && !isLoginView) {
+                    // gdy nie jest zalogowany to przekieruj na logowanie
+                    getNavigator().navigateTo(Biu7251LoginView.NAME);
+                    return false;
+
+                } else if (isLoggedIn && isLoginView) {
+                    // jeżeli zalogowany - nie wpuszczaj do logowania
+                    return false;
+                }
+
+                return true;
+            }
+            
+            public void afterViewChange(ViewChangeEvent event) {
+                
+            }
+        });
+    }
 
 }
