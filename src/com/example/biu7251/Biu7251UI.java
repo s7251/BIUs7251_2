@@ -1,21 +1,15 @@
 package com.example.biu7251;
 
-import java.util.ArrayList;
+
 
 import javax.servlet.annotation.WebServlet;
-
-import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+
 
 @SuppressWarnings("serial")
 public class Biu7251UI extends UI {
@@ -25,14 +19,15 @@ public class Biu7251UI extends UI {
 	public static class Servlet extends VaadinServlet {
 	}
 
+	
+	
 	@Override
 	protected void init(VaadinRequest request) {
 		      
         
         new Navigator(this, this);// stworzenie nowego nawigatora
         getNavigator().addView(Biu7251LoginView.NAME, Biu7251LoginView.class); // panel logowania jako główny
-        getNavigator().addView(Biu7251MainView.NAME,
-                Biu7251MainView.class); //dodanie głównego widoku
+        getNavigator().addView(Biu7251MainView.NAME,  Biu7251MainView.class); //dodanie głównego widoku
                        
         
         // użycie obsłuugi zmian widoku aby zapewnić przekierowanie do widoku logowania jeśli user nie zalogowany

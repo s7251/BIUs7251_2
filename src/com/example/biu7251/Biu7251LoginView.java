@@ -32,7 +32,7 @@ public class Biu7251LoginView extends CustomComponent implements View,
 		user = new TextField("Login:");
 		user.setWidth("300px");
 		user.setRequired(true);
-		user.setInputPrompt("Wpisz Twój pesel jako login (89051011492)");
+		user.setInputPrompt("Wpisz Twój login");
 
 		user.setInvalidAllowed(false);
 
@@ -48,7 +48,7 @@ public class Biu7251LoginView extends CustomComponent implements View,
 
 		// Panel logowania
 		VerticalLayout fields = new VerticalLayout(user, password, loginButton);
-		fields.setCaption("### Witamy w elektronicznym systemie pacjenta! ###");
+		fields.setCaption("############# Witamy w systemie! #############");
 		fields.setSpacing(true);
 		fields.setMargin(new MarginInfo(true, true, true, false));
 		fields.setSizeUndefined();
@@ -97,8 +97,8 @@ public class Biu7251LoginView extends CustomComponent implements View,
 	public void buttonClick(ClickEvent event) {
 
 		
-		// Walidacja pól
-		if (!user.isValid() || !password.isValid()) {
+		// Walidacja hasła
+		if (!password.isValid()) {
 			Notification.show("Hasło musi posiadać minimum 5 znaków", "",
 					Notification.Type.ERROR_MESSAGE);
 			this.password.setValue(null);
@@ -112,11 +112,11 @@ public class Biu7251LoginView extends CustomComponent implements View,
 		//
 		// Walidacja loginu i hasła
 		//
-		boolean isValid = username.equals("89051011492") && password.equals("wpuscmnie");
+		boolean isValid = username.equals("uzytkownik") && password.equals("wpuscmnie");
 
 		if (isValid) {
 			Notification.show("Zalogowano",
-					"Witamy w elektronicznym systemie pacjenta",
+					"Witamy w systemie",
 					Notification.Type.HUMANIZED_MESSAGE);
 
 			// zapisz w sesji
