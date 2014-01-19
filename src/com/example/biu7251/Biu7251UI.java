@@ -1,8 +1,7 @@
 package com.example.biu7251;
 
-
-
 import javax.servlet.annotation.WebServlet;
+
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
@@ -14,7 +13,7 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class Biu7251UI extends UI {
 
-	@WebServlet(value = "/*", asyncSupported = true)
+	@WebServlet(value = {"/ui/*", "/VAADIN/*"}, asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = Biu7251UI.class)
 	public static class Servlet extends VaadinServlet {
 	}
