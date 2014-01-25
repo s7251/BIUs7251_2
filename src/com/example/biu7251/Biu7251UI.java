@@ -23,36 +23,18 @@ public class Biu7251UI extends UI {
 	@VaadinServletConfiguration(productionMode = false, ui = Biu7251UI.class)
 	public static class Servlet extends VaadinServlet {
 	}
-
-	
-	
 	
 	@Override
 	protected void init(VaadinRequest request) {
 		      
-//
-//		
-//		try {
-//	      	pool = 
-//	  	} catch (SQLException e) {
-//	    	  e.printStackTrace();
-//	    }
-		
-//		TableQuery q = new TableQuery("contractors", pool);
-//		q.setVersionColumn("OPTLOCK");
-//		try {
-//			SQLContainer container = new SQLContainer(q);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
         
         new Navigator(this, this);// stworzenie nowego nawigatora
         getNavigator().addView(Biu7251LoginView.NAME, Biu7251LoginView.class); // panel logowania jako główny
         getNavigator().addView(Biu7251MainView.NAME,  Biu7251MainView.class); //dodanie głównego widoku
                        
         
-        // użycie obsłuugi zmian widoku aby zapewnić przekierowanie do widoku logowania jeśli user nie zalogowany
+        // użycie obsługi zmian widoku aby zapewnić przekierowanie do widoku logowania jeśli user nie zalogowany
         
         getNavigator().addViewChangeListener(new ViewChangeListener() {
             
