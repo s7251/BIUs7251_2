@@ -1,8 +1,14 @@
 package com.example.biu7251;
 
+import java.sql.SQLException;
+
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
@@ -20,9 +26,26 @@ public class Biu7251UI extends UI {
 
 	
 	
+	
 	@Override
 	protected void init(VaadinRequest request) {
 		      
+//
+//		
+//		try {
+//	      	pool = 
+//	  	} catch (SQLException e) {
+//	    	  e.printStackTrace();
+//	    }
+		
+//		TableQuery q = new TableQuery("contractors", pool);
+//		q.setVersionColumn("OPTLOCK");
+//		try {
+//			SQLContainer container = new SQLContainer(q);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
         
         new Navigator(this, this);// stworzenie nowego nawigatora
         getNavigator().addView(Biu7251LoginView.NAME, Biu7251LoginView.class); // panel logowania jako główny

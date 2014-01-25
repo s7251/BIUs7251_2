@@ -17,6 +17,17 @@
 		<conf name="nodeploy" />
 	</configurations>
 	<dependencies defaultconf="default" defaultconfmapping="default->default">
+       
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.28"/>       
+       	<dependency org="org.hibernate" name="hibernate-tools" rev="3.2.3.GA"/>        
+		<dependency org="org.hibernate" name="hibernate-annotations" rev="3.3.0.ga"/>
+		<dependency org="org.hibernate" name="hibernate-commons-annotations" rev="3.0.0.ga"/>
+		<dependency org="dom4j" name="dom4j" rev="1.6.1"/>
+		<dependency org="commons-logging" name="commons-logging" rev="1.1.1"/>
+		<dependency org="commons-collections" name="commons-collections" rev="3.2.1"/>
+		<dependency org="cglib" name="cglib-nodep" rev="2.2.2"/>
+		<dependency org="javax.transaction" name="jta" rev="1.1"/>
+		
 		<!-- The core server part of Vaadin -->
 		<dependency org="com.vaadin" name="vaadin-server" rev="&vaadin.version;" />
 

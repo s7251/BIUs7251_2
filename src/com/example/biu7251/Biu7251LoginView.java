@@ -48,7 +48,6 @@ public class Biu7251LoginView extends CustomComponent implements View,
 
 		// Panel logowania
 		VerticalLayout fields = new VerticalLayout(user, password, loginButton);
-		fields.setCaption("############# Witamy w systemie! #############");
 		fields.setSpacing(true);
 		fields.setMargin(new MarginInfo(true, true, true, false));
 		fields.setSizeUndefined();

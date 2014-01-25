@@ -1,5 +1,6 @@
-
 package com.example.biu7251;
+
+import java.sql.SQLException;
 
 import com.vaadin.annotations.Title;
 import com.vaadin.data.Container.Filter;
@@ -8,6 +9,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.navigator.View;
@@ -21,34 +23,39 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-/* 
- * UI class is the starting point for your app. You may deploy it with VaadinServlet
- * or VaadinPortlet by giving your UI class name a parameter. When you browse to your
- * app a web page showing your UI is automatically generated. Or you may choose to 
- * embed your UI to an existing web page. 
- */
 @Title("Addressbook")
 public class Biu7251MainView extends CustomComponent implements View {
 
-	/* User interface components are stored in session. */
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// Baza
+	
+	
+	
+	
+//	container.getItem(container.addItem()).getItemProperty("FNAME").setValue("asdA");
+	
+	// Zdefiniowanie komponentów dla widoku
+	
 	private Table contactList = new Table();
 	private TextField searchField = new TextField();
-	private Button addNewContactButton = new Button("New");
-	private Button removeContactButton = new Button("Remove this contact");
+	private Button addNewContactButton = new Button("Nowy");
+	private Button removeContactButton = new Button("Usuń Kontakt");
 	private FormLayout editorLayout = new FormLayout();
 	private FieldGroup editorFields = new FieldGroup();
 	
 	public static final String NAME = "";
-	private static final String FNAME = "First Name";
-	private static final String LNAME = "Last Name";
-	private static final String COMPANY = "Company";
+	private static final String FNAME = "Imię";
+	private static final String LNAME = "Nazwisko";
+	private static final String TELEPHONE = "Telefon";
 	private static final String[] fieldNames = new String[] { FNAME, LNAME,
-			COMPANY };
+		TELEPHONE };
 
 	Button logoutButton = new Button("Wyloguj", new Button.ClickListener() {
 
@@ -70,25 +77,28 @@ public class Biu7251MainView extends CustomComponent implements View {
 	 * implementations.
 	 */
 	IndexedContainer contactContainer = createDummyDatasource();
+	SQLContainer sqlCont;
+	
 
 	public Biu7251MainView(){
-		initLayout();
-		initContactList();
-		initEditor();
-		initSearch();
-		initAddRemoveButtons();
+//		initLayout();
+//		initContactList();
+//		initEditor();
+//		initSearch();
+//		initAddRemoveButtons();
+		sqlCont=new DatabaseHelper().getPersonContainer();
+		
+		
+		
+		
 	}
 
-	/*
-	 * In this example layouts are programmed in Java. You may choose use a
-	 * visual editor, CSS or HTML templates for layout instead.
-	 */
 	private void initLayout() {
-		/* Root of the user interface component tree is set */
+		// inicjacja layoutu dla komponentów widoku
 		HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
 		setCompositionRoot(splitPanel);
 		
-		/* Build the component tree */
+		// budowanie drzewa komponentów
 		VerticalLayout leftLayout = new VerticalLayout ();
 		splitPanel.addComponent(leftLayout);
 		splitPanel.addComponent(editorLayout);
@@ -99,26 +109,19 @@ public class Biu7251MainView extends CustomComponent implements View {
 		bottomLeftLayout.addComponent(addNewContactButton);
 		bottomLeftLayout.addComponent(logoutButton);
 
-		/* Set the contents in the left of the split panel to use all the space */
+		// ustawienie max rozmiaru dla lewej części layoutu w splitPanelu
 		leftLayout.setSizeFull();
 
-		/*
-		 * On the left side, expand the size of the contactList so that it uses
-		 * all the space left after from bottomLeftLayout
-		 */
+		// ustawienie max rozmiaru dla listy kontaktów
 		leftLayout.setExpandRatio(contactList, 1);
 		contactList.setSizeFull();
 
-		/*
-		 * In the bottomLeftLayout, searchField takes all the width there is
-		 * after adding addNewContactButton. The height of the layout is defined
-		 * by the tallest component.
-		 */
+		// ustawienie 100% szerokości dla pola wyszukiwania po dodaniu przycisków Dodaj i Wyloguj; wysokość ustawiana taka jak najwyższy komponent
 		bottomLeftLayout.setWidth("100%");
 		searchField.setWidth("100%");
 		bottomLeftLayout.setExpandRatio(searchField, 1);
 
-		/* Put a little margin around the fields in the right side editor */
+		// ustawienie małego marginesu po prawej stronie edytora
 		editorLayout.setMargin(true);
 		editorLayout.setVisible(false);
 	}
@@ -147,7 +150,7 @@ public class Biu7251MainView extends CustomComponent implements View {
 		 */
 		editorFields.setBuffered(false);
 	}
-
+	
 	private void initSearch() {
 
 		/*
@@ -198,7 +201,7 @@ public class Biu7251MainView extends CustomComponent implements View {
 		public boolean passesFilter(Object itemId, Item item) {
 			String haystack = ("" + item.getItemProperty(FNAME).getValue()
 					+ item.getItemProperty(LNAME).getValue() + item
-					.getItemProperty(COMPANY).getValue()).toLowerCase();
+					.getItemProperty(TELEPHONE).getValue()).toLowerCase();
 			return haystack.contains(needle);
 		}
 
@@ -242,7 +245,7 @@ public class Biu7251MainView extends CustomComponent implements View {
 
 	private void initContactList() {
 		contactList.setContainerDataSource(contactContainer);
-		contactList.setVisibleColumns(new String[] { FNAME, LNAME, COMPANY });
+		
 		contactList.setSelectable(true);
 		contactList.setImmediate(true);
 
@@ -250,12 +253,7 @@ public class Biu7251MainView extends CustomComponent implements View {
 			public void valueChange(ValueChangeEvent event) {
 				Object contactId = contactList.getValue();
 
-				/*
-				 * When a contact is selected from the list, we want to show
-				 * that in our editor on the right. This is nicely done by the
-				 * FieldGroup that binds all the fields to the corresponding
-				 * Properties in our contact at once.
-				 */
+				// Uaktywnienie edytora gdy contactId != null 
 				if (contactId != null)
 					editorFields.setItemDataSource(contactList
 							.getItem(contactId));
@@ -278,126 +276,78 @@ public class Biu7251MainView extends CustomComponent implements View {
 			ic.addContainerProperty(p, String.class, "");
 		}
 
-		/* Create dummy data by randomly combining first and last names */
-		String[] fnames = { "Peter", "Alice", "Joshua", "Mike", "Olivia",
-				"Nina", "Alex", "Rita", "Dan", "Umberto", "Henrik", "Rene",
-				"Lisa", "Marge" };
-		String[] lnames = { "Smith", "Gordon", "Simpson", "Brown", "Clavel",
-				"Simons", "Verne", "Scott", "Allison", "Gates", "Rowling",
-				"Barks", "Ross", "Schneider", "Tate" };
-		
-		
-		/*AddressbookDATA b = new AddressbookDATA();
-      
-        List<AddressbookUSER> uzytkownicy = b.selectUzytkownicy();
-       
-            System.out.println("asd");
-        
-        for(AddressbookUSER c: uzytkownicy){
-        	Object id = ic.addItem();
-        	
-        	ic.getContainerProperty(id, FNAME).setValue("krystian");
-        	ic.getContainerProperty(id, LNAME).setValue("krystian");
-        	
-        }*/
-		 System.out.println("1234");
-	 for (int i = 0; i < 1000; i++) {
+		// Dodawanie użytkowników do listy
+			
+	
+	
              Object id = ic.addItem();
-             ic.getContainerProperty(id, FNAME).setValue(fnames[1]);
-             ic.getContainerProperty(id, LNAME).setValue(lnames[4]);
+             ic.getContainerProperty(id, FNAME).setValue("Krystian");
+             ic.getContainerProperty(id, LNAME).setValue("Kulas");
              
-     }
+     
 
 		return ic;
 	}
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
+		VerticalLayout vl = new VerticalLayout();
+		setCompositionRoot(vl);
+		Table t = new Table();
+	
+		t.setContainerDataSource(sqlCont );
+		vl.addComponent(t);
 		
+		final TextField name = new TextField("imie");
+		name.setInputPrompt("podaj imię");
+		vl.addComponent(name);
+		
+		Button b = new Button("dodaj");
+		
+		
+		b.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				if (name.getValue().length()>0)
+				{
+					addPerson(name.getValue(), "jakis", "64654");
+					
+				}
+				
+			}
+		});
+		
+		vl.addComponent(b);
+		
+//		Object itemId = sqlCont.addItem();
+//		Item item = sqlCont.getItem(itemId);
+		
+		}
+	
+	private void addPerson(String fname, String sname, String tel){
+		  try {
+			  sqlCont.rollback();
+		  } catch (SQLException ignored) {
+		  }
+		  Object tempItemId = sqlCont.addItem();
+		  
+		  sqlCont.getContainerProperty(tempItemId, "FNAME").setValue(fname);
+		  sqlCont.getContainerProperty(tempItemId, "SNAME").setValue(sname); 
+		  sqlCont.getContainerProperty(tempItemId, "TELEPHONE").setValue(tel); 
+	      try {
+	    	  sqlCont.commit();
+		} catch (UnsupportedOperationException e) {
+			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
 	}
+		
+	
 
 }
 
 
-
-/*package com.example.biu7251;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.FileResource;
-import com.vaadin.server.Page;
-import com.vaadin.server.VaadinService;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.VerticalLayout;
-
-public class Biu7251MainView extends CustomComponent implements View {
-	
-
-	private static final long serialVersionUID = 1L;
-	
-	final HorizontalLayout buttonBox = new HorizontalLayout();
-	final VerticalLayout mainBox = new VerticalLayout();
-	
-	
-
-    public static final String NAME = "";
-    Label text = new Label();
-
-       
-    Button logoutButton = new Button("Wyloguj", new Button.ClickListener() {
-
-        @Override
-        public void buttonClick(ClickEvent event) {
-            // Wylogowanie
-            getSession().setAttribute("user", null);
-            Notification.show("Wylogowano",
-                    "Do widzenia!",
-                    Notification.Type.HUMANIZED_MESSAGE);
-            // Przejście na panel logowania
-            getUI().getNavigator().navigateTo(NAME);
-        }
-    });
-
-    public Biu7251MainView() {
-    	
-		
-		buttonBox.addComponent(logoutButton);
-    	buttonBox.setMargin(true);
-		
-	   	
-		mainBox.addComponent(buttonBox);
-	
-        
-        setCompositionRoot(new CssLayout(mainBox));
-        
-        //////////////////////////////
-        
-        /////////////////////////////
-        
-        
-    }
-
-   	@Override
-    public void enter(ViewChangeEvent event) {
-        // Pobieranie danych z sesji
-        String username = String.valueOf(getSession().getAttribute("user"));
-    }
-}
-*/
